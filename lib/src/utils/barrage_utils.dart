@@ -31,14 +31,51 @@ class BarrageUtils {
   }
 
   /// Whether there is room for the barrage to be inserted
-  static hasInsertOffsetSpaceComputed(
+  static bool hasInsertOffsetSpaceComputed(
       BarrageModel trackLastBarrage, double willInsertBarrageRunDistance) {
     return (trackLastBarrage.runDistance - trackLastBarrage.barrageSize.width) >
         willInsertBarrageRunDistance;
   }
 
   ///Whether the injection barrage will collide
-  static bool trackInsertBarrageHashmap() {
-    return false;
+  static bool trackInsertBarrageHashmap({
+    required BarrageModel trackLastBarrage,
+    required Size needInsertBarrageSize,
+    int offsetMillisecond = 0,
+  }) {
+    ///The barrage is off the right screen.
+    if (!trackLastBarrage.allOutRight) return true;
+
+    ///Need to insert the barrage every frame rate run distance.
+    double insertBarrageEveryFrameRateRunDistance =
+        BarrageUtils.getBarrageEveryFrameRateRunDistance(
+      needInsertBarrageSize.width,
+    );
+    bool hasInsertOffsetSpace = true;
+    double insertBarrageRunDistance =
+        BarrageConfig.unitTimer * insertBarrageEveryFrameRateRunDistance;
+    if (offsetMillisecond > 0) {
+      insertBarrageRunDistance = (offsetMillisecond / BarrageConfig.unitTimer) *
+          insertBarrageEveryFrameRateRunDistance;
+    }
+    hasInsertOffsetSpace = hasInsertOffsetSpaceComputed(
+      trackLastBarrage,
+      insertBarrageRunDistance,
+    );
+    if (!hasInsertOffsetSpace) return true;
+
+    ///Compare the velocity of the barrage to be injected with that of the last barrage.
+    if (insertBarrageEveryFrameRateRunDistance >
+        trackLastBarrage.everyFrameRunDistance) {
+      double insertBarrageLeaveScreenRemainderTime = remainderTimeLeaveScreen(
+        insertBarrageRunDistance,
+        0,
+        insertBarrageEveryFrameRateRunDistance,
+      );
+      return trackLastBarrage.leaveScreenRemainderTime >
+          insertBarrageLeaveScreenRemainderTime;
+    }else{
+      return false;
+    }
   }
 }
