@@ -5,7 +5,9 @@ import 'package:flutter_barrage_craft/src/model/track_model.dart';
 
 class BarrageUtils {
   ///Calculate the width and height of the barrage.
-  static Size getBarrageSize() {
+  static Size getBarrageSizeByText(
+    String text,
+  ) {
     return const Size(0, 0);
   }
 
@@ -38,7 +40,7 @@ class BarrageUtils {
   }
 
   ///Whether the injection barrage will collide
-  static bool trackInsertBarrageHashmap({
+  static bool trackInsertBarrageHashMap({
     required BarrageModel trackLastBarrage,
     required Size needInsertBarrageSize,
     int offsetMillisecond = 0,
@@ -74,7 +76,7 @@ class BarrageUtils {
       );
       return trackLastBarrage.leaveScreenRemainderTime >
           insertBarrageLeaveScreenRemainderTime;
-    }else{
+    } else {
       return false;
     }
   }

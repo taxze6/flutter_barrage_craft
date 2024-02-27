@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../model/barrage_model.dart';
+
 class BarrageConfig {
   ///Barrage frame rate.
   static int frameRate = 60;
@@ -19,5 +21,6 @@ class BarrageConfig {
   ///Barrage moves double speed, default is 1.
   static double barrageRate = 1.0;
 
-  static late Function() barrageTapCallBack;
+  ///Barrage click event.
+  static late Function(BarrageModel) barrageTapCallBack;
 }
