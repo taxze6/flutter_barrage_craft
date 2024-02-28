@@ -114,7 +114,33 @@ class BarrageController {
     );
   }
 
-  // BarrageModel addBarrage() {
-  //
-  // }
+  BarrageModel addBarrage({
+    required Widget barrageWidget,
+    Size? widgetSize,
+  }) {
+    late Size barrageSize;
+    if (widgetSize != null) {
+      barrageSize = widgetSize;
+    } else {
+      barrageSize = BarrageUtils.getBarrageSizeByWidget(barrageWidget);
+    }
+    double everyFrameRunDistance =
+        BarrageUtils.getBarrageEveryFrameRateRunDistance(barrageSize.width);
+    double runDistance = BarrageConfig.unitTimer * everyFrameRunDistance;
+    //TODO To be optimized: If no track can have an injection barrage, wait for a while.
+    BarrageTrack track = findAllowInsertTrack(barrageSize)!;
+    double offsetY = track.offsetTop;
+    BarrageModel barrage = barrageManager.initBarrage(
+      barrageWidget: barrageWidget,
+      offsetY: offsetY,
+      everyFrameRunDistance: everyFrameRunDistance,
+      runDistance: runDistance,
+      barrageSize: barrageSize,
+      // offsetMS: Random().nextInt(5000),
+      offsetMS: 0,
+    );
+    track.lastBarrageId = barrage.barrageId;
+    print(" Join the track as: ${track.toString()}");
+    return barrage;
+  }
 }

@@ -3,6 +3,7 @@ import '../config/barrage_config.dart';
 
 class BarrageModel {
   UniqueKey barrageId;
+  Widget barrageWidget;
   double offsetY;
   double runDistance = 0;
   double everyFrameRunDistance;
@@ -10,6 +11,7 @@ class BarrageModel {
 
   BarrageModel({
     required this.barrageId,
+    required this.barrageWidget,
     required this.offsetY,
     required this.everyFrameRunDistance,
     required this.runDistance,

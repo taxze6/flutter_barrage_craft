@@ -5,9 +5,11 @@ import 'package:flutter_barrage_craft/src/model/track_model.dart';
 
 class BarrageUtils {
   ///Calculate the width and height of the barrage.
-  static Size getBarrageSizeByText(
-    String text,
-  ) {
+  static Size getBarrageSizeByText(String text) {
+    return const Size(0, 0);
+  }
+
+  static Size getBarrageSizeByWidget(Widget widget) {
     return const Size(0, 0);
   }
 

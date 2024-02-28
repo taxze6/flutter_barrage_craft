@@ -23,6 +23,7 @@ class BarrageManager {
   }
 
   BarrageModel initBarrage({
+    required Widget barrageWidget,
     required double offsetY,
     required double everyFrameRunDistance,
     required double runDistance,
@@ -32,6 +33,7 @@ class BarrageManager {
     UniqueKey barrageId = UniqueKey();
     BarrageModel barrage = BarrageModel(
       barrageId: barrageId,
+      barrageWidget: barrageWidget,
       offsetY: offsetY,
       everyFrameRunDistance: everyFrameRunDistance,
       runDistance: runDistance,
