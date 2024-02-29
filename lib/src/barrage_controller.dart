@@ -10,6 +10,8 @@ import 'model/barrage_model.dart';
 import 'model/track_model.dart';
 
 class BarrageController {
+  late Function setState;
+
   ///Whether to pause the movement of the barrage.
   bool get isPause => BarrageConfig.pause;
 
@@ -36,6 +38,24 @@ class BarrageController {
     if (_isInit) return;
     _isInit = true;
     play();
+    run(
+      () {
+        renderNextFrameRate(barrages, allBarrageOffScreenCallBack,
+            singBarrageOffScreenCallBack);
+      },
+      setState,
+    );
+  }
+
+  void run(Function nextFrame, Function setState) {
+    _timer = Timer.periodic(Duration(milliseconds: BarrageConfig.unitTimer),
+        (timer) {
+      // When the barrage is suspended, it is not executed.
+      if (!BarrageConfig.pause) {
+        nextFrame();
+        setState(() {});
+      }
+    });
   }
 
   void play() {
@@ -44,6 +64,10 @@ class BarrageController {
 
   void pause() {
     BarrageConfig.pause = true;
+  }
+
+  void dispose() {
+    _timer?.cancel();
   }
 
   /// The barrage cleared the screen.
@@ -56,10 +80,20 @@ class BarrageController {
   }
 
   ///When all the barrages are off the screen
-  void allBarrageOffScreenCallBack({
-    required UniqueKey barrageId,
+  void allBarrageOffScreenCallBack(
+    UniqueKey barrageId,
     // required Function() callBack,
-  }) {
+  ) {
+    if (barrageId == barrageManager.barrageKeys.last) {
+      // callBack();
+    }
+  }
+
+  ///When a single barrage disappears from the screen.
+  void singBarrageOffScreenCallBack(
+    UniqueKey barrageId,
+    // required Function() callBack,
+  ) {
     if (barrageId == barrageManager.barrageKeys.last) {
       // callBack();
     }

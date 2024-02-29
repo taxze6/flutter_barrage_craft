@@ -23,4 +23,7 @@ class BarrageConfig {
 
   ///Barrage click event.
   static late Function(BarrageModel) barrageTapCallBack;
+
+  ///Double click event of the bullet screen.
+  static late Function(BarrageModel) barrageDoubleTapCallBack;
 }
