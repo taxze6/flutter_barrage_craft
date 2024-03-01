@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_barrage_craft/src/config/barrage_config.dart';
 import 'package:flutter_barrage_craft/src/model/barrage_model.dart';
 import 'package:flutter_barrage_craft/src/model/track_model.dart';
@@ -6,11 +7,39 @@ import 'package:flutter_barrage_craft/src/model/track_model.dart';
 class BarrageUtils {
   ///Calculate the width and height of the barrage.
   static Size getBarrageSizeByText(String text) {
-    return const Size(0, 0);
+    const constraints = BoxConstraints(
+      maxWidth: 999.0, // maxWidth calculated
+      minHeight: 0.0,
+      minWidth: 0.0,
+    );
+    RenderParagraph renderParagraph = RenderParagraph(
+      TextSpan(
+        text: text,
+        style: const TextStyle(
+          fontSize: 14,
+        ),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+      maxLines: 1,
+    );
+    renderParagraph.layout(constraints);
+    double w = renderParagraph.getMinIntrinsicWidth(14).ceilToDouble();
+    double h = renderParagraph.getMinIntrinsicHeight(999).ceilToDouble();
+    return Size(w, h);
   }
 
   static Size getBarrageSizeByWidget(Widget widget) {
-    return const Size(0, 0);
+    Size resultSize = const Size(0, 0);
+    MeasurableWidget(
+      onChange: (Size size) {
+        // print('====$size');
+        resultSize = size;
+      },
+      child: widget,
+    );
+
+    return resultSize;
   }
 
   ///Calculate how far each frame needs to run based on the length of the barrage.
@@ -83,3 +112,93 @@ class BarrageUtils {
     }
   }
 }
+
+class MeasurableWidget extends SingleChildRenderObjectWidget {
+  const MeasurableWidget({
+    Key? key,
+    required this.onChange,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  final void Function(Size size) onChange;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      MeasureSizeRenderObject(onChange);
+}
+
+class MeasureSizeRenderObject extends RenderProxyBox {
+  MeasureSizeRenderObject(this.onChange);
+
+  void Function(Size size) onChange;
+
+  Size _prevSize = Size.zero;
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    Size newSize = child?.size ?? Size.zero;
+    if (_prevSize == newSize) return;
+    _prevSize = newSize;
+    WidgetsBinding.instance.addPostFrameCallback((_) => onChange(newSize));
+  }
+}
+
+// typedef OnSized = void Function(Rect rect);
+//
+// mixin MeasurableMixin<T extends StatefulWidget> on State<T> {
+//   @override
+//   BuildContext get context;
+//
+//   @override
+//   void initState() {
+//     WidgetsBinding.instance.addPostFrameCallback(_afterRendering);
+//     super.initState();
+//   }
+//
+//   void _afterRendering(Duration timeStamp) {
+//     RenderObject? renderObject = context.findRenderObject();
+//     if (renderObject != null) {
+//       Size size = renderObject.paintBounds.size;
+//       var box = renderObject as RenderBox;
+//       onSized(
+//         Rect.fromLTWH(
+//           box.localToGlobal(Offset.zero).dx,
+//           box.localToGlobal(Offset.zero).dy,
+//           size.width,
+//           size.height,
+//         ),
+//       );
+//     } else {
+//       onSized(Rect.zero);
+//     }
+//   }
+//
+//   void onSized(Rect rect);
+// }
+//
+// class MeasurableWidget extends StatefulWidget {
+//   final Widget child;
+//
+//   final OnSized onSized;
+//
+//   const MeasurableWidget({
+//     Key? key,
+//     required this.child,
+//     required this.onSized,
+//   }) : super(key: key);
+//
+//   @override
+//   State<StatefulWidget> createState() {
+//     return _MeasurableWidgetState();
+//   }
+// }
+//
+// class _MeasurableWidgetState extends State<MeasurableWidget>
+//     with MeasurableMixin<MeasurableWidget> {
+//   @override
+//   Widget build(BuildContext context) => widget.child;
+//
+//   @override
+//   void onSized(Rect rect) => widget.onSized(rect);
+// }

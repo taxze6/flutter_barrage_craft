@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:flutter_barrage_craft/flutter_barrage_craft.dart';
 
 void main() {
@@ -20,7 +17,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
