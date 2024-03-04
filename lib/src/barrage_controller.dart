@@ -40,8 +40,11 @@ class BarrageController {
     play();
     run(
       () {
-        renderNextFrameRate(barrages, allBarrageOffScreenCallBack,
-            singBarrageOffScreenCallBack);
+        renderNextFrameRate(
+          barrages,
+          allBarrageOffScreenCallBack,
+          singBarrageOffScreenCallBack,
+        );
       },
       setState,
     );
@@ -148,15 +151,15 @@ class BarrageController {
     );
   }
 
-  BarrageModel addBarrage({
+  Future<BarrageModel> addBarrage({
     required Widget barrageWidget,
     Size? widgetSize,
-  }) {
+  }) async {
     late Size barrageSize;
     if (widgetSize != null) {
       barrageSize = widgetSize;
     } else {
-      barrageSize = BarrageUtils.getBarrageSizeByWidget(barrageWidget);
+      barrageSize = await BarrageUtils.getBarrageSizeByWidget(barrageWidget);
     }
     double everyFrameRunDistance =
         BarrageUtils.getBarrageEveryFrameRateRunDistance(barrageSize.width);

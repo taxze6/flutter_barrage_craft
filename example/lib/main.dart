@@ -18,7 +18,11 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    controller.init(Size(MediaQuery.of(context).size.width, 300));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        controller.init(Size(MediaQuery.of(context).size.width, 300));
+      });
+    });
   }
 
   @override
@@ -55,26 +59,46 @@ class _MyAppState extends State<MyApp> {
                   ],
                 ),
               ),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          controller.addBarrage(
-                            barrageWidget: Text(
-                              "1111",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Text("Add Barrage"),
-                      )
-                    ],
-                  )
-                ],
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            controller.pause();
+                          },
+                          child: const Text("Pause"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            controller
+                                .addBarrage(
+                                  barrageWidget: Text(
+                                    "1111",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                              widgetSize: Size(200,200)
+                                )
+                                .then((value) => {});
+                          },
+                          child: const Text("Add Barrage"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            controller.play();
+                          },
+                          child: const Text("Play"),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               )
             ],
           ),

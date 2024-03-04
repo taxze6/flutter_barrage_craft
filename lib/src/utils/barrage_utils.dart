@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_barrage_craft/src/config/barrage_config.dart';
@@ -29,19 +31,18 @@ class BarrageUtils {
     return Size(w, h);
   }
 
-  static Size getBarrageSizeByWidget(Widget widget) {
-    Size resultSize = const Size(0, 0);
+  static Future<Size> getBarrageSizeByWidget(Widget widget) async {
+    Completer<Size> completer = Completer<Size>();
+
     MeasurableWidget(
       onChange: (Size size) {
-        // print('====$size');
-        resultSize = size;
+        completer.complete(size);
       },
       child: widget,
     );
 
-    return resultSize;
+    return completer.future;
   }
-
   ///Calculate how far each frame needs to run based on the length of the barrage.
   static double getBarrageEveryFrameRateRunDistance(double barrageWidth) {
     assert(barrageWidth > 0);
@@ -140,6 +141,7 @@ class MeasureSizeRenderObject extends RenderProxyBox {
     Size newSize = child?.size ?? Size.zero;
     if (_prevSize == newSize) return;
     _prevSize = newSize;
+
     WidgetsBinding.instance.addPostFrameCallback((_) => onChange(newSize));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barrage_craft/src/config/barrage_config.dart';
 import 'package:flutter_barrage_craft/src/model/barrage_model.dart';
+import 'package:flutter_barrage_craft/src/utils/barrage_utils.dart';
 
 import '../model/track_model.dart';
 
@@ -28,8 +29,8 @@ class BarrageTrackManager {
   }
 
   ///Fill the area with track.
-  void buildTrackFullScreen() {
-    Size trackSize = const Size(0, 0);
+  void buildTrackFullScreen() async {
+    Size trackSize = Size(200, 200);
     while (
         allTrackHeight < (BarrageConfig.areaSize.height - trackSize.height)) {
       if (areaAllowBuildNewTrack(trackSize.height)) {
