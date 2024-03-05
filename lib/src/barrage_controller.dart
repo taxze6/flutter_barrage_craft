@@ -165,7 +165,14 @@ class BarrageController {
         BarrageUtils.getBarrageEveryFrameRateRunDistance(barrageSize.width);
     double runDistance = BarrageConfig.unitTimer * everyFrameRunDistance;
     //TODO To be optimized: If no track can have an injection barrage, wait for a while.
-    BarrageTrack track = findAllowInsertTrack(barrageSize)!;
+    BarrageTrack? track = findAllowInsertTrack(barrageSize);
+    if (track == null) {
+      // If no track can have an injection barrage, wait for a while and try again
+      await Future.delayed(
+        const Duration(milliseconds: 500),
+      ); // Wait for 500 milliseconds
+      return addBarrage(barrageWidget: barrageWidget, widgetSize: widgetSize);
+    }
     double offsetY = track.offsetTop;
     BarrageModel barrage = barrageManager.initBarrage(
       barrageWidget: barrageWidget,

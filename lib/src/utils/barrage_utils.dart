@@ -43,6 +43,7 @@ class BarrageUtils {
 
     return completer.future;
   }
+
   ///Calculate how far each frame needs to run based on the length of the barrage.
   static double getBarrageEveryFrameRateRunDistance(double barrageWidth) {
     assert(barrageWidth > 0);
