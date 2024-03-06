@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
                                       color: Colors.white,
                                     ),
                                   ),
-                              widgetSize: Size(80,20)
+                              // widgetSize: Size(80,20)
                                 )
                                 .then((value) => {});
                           },

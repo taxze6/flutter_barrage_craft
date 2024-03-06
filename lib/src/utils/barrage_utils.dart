@@ -33,14 +33,15 @@ class BarrageUtils {
 
   static Future<Size> getBarrageSizeByWidget(Widget widget) async {
     Completer<Size> completer = Completer<Size>();
-
     MeasurableWidget(
       onChange: (Size size) {
         completer.complete(size);
+        if (size != Size.zero) {
+          print("----The size of widget is:$size");
+        }
       },
       child: widget,
     );
-
     return completer.future;
   }
 

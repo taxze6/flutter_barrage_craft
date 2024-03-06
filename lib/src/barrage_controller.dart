@@ -159,7 +159,11 @@ class BarrageController {
     if (widgetSize != null) {
       barrageSize = widgetSize;
     } else {
-      barrageSize = await BarrageUtils.getBarrageSizeByWidget(barrageWidget);
+      try {
+        barrageSize = await BarrageUtils.getBarrageSizeByWidget(barrageWidget);
+      } catch (e) {
+        print(e);
+      }
     }
     double everyFrameRunDistance =
         BarrageUtils.getBarrageEveryFrameRateRunDistance(barrageSize.width);
