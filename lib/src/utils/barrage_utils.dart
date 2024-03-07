@@ -32,8 +32,10 @@ class BarrageUtils {
   }
 
   static Future<Size> getBarrageSizeByWidget(Widget widget) async {
-    Completer<Size> completer = Completer<Size>();
-    MeasurableWidget(
+    final GlobalKey key = GlobalKey();
+    final Completer<Size> completer = Completer<Size>();
+    final MeasurableWidget measurableWidget = MeasurableWidget(
+      key: key,
       onChange: (Size size) {
         completer.complete(size);
         if (size != Size.zero) {
@@ -41,6 +43,18 @@ class BarrageUtils {
         }
       },
       child: widget,
+    );
+
+    // Check that GlobalKey has been associated with the visual tree
+    if (key.currentContext == null) {
+      throw Exception("Error: GlobalKey is not attached to the visual tree.");
+    }
+
+    final BuildContext context = key.currentContext!;
+    Overlay.of(context).insert(
+      OverlayEntry(
+        builder: (BuildContext context) => measurableWidget,
+      ),
     );
     return completer.future;
   }
@@ -147,7 +161,6 @@ class MeasureSizeRenderObject extends RenderProxyBox {
     WidgetsBinding.instance.addPostFrameCallback((_) => onChange(newSize));
   }
 }
-
 // typedef OnSized = void Function(Rect rect);
 //
 // mixin MeasurableMixin<T extends StatefulWidget> on State<T> {
