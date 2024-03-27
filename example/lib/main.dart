@@ -18,6 +18,16 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    controller.setBarrageTapCallBack((value) {
+      print(value.toString());
+      //Pause a single barrage.
+      setState(() {
+        value.pause = !value.pause;
+      });
+    });
+    controller.setBarrageDoubleTapCallBack((value) {
+      print(value.toString());
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         controller.init(Size(MediaQuery.of(context).size.width, 300));
@@ -75,17 +85,16 @@ class _MyAppState extends State<MyApp> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            controller
-                                .addBarrage(
-                                  barrageWidget: Text(
-                                    "1111",
-                                    style: TextStyle(
-                                      color: Colors.white,
+                            controller.addBarrage(
+                                    barrageWidget: Text(
+                                      "1111",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                              // widgetSize: Size(80,20)
-                                )
-                                .then((value) => {});
+                                    widgetSize: Size(80, 20))
+                                // .then((value) => {})
+                                ;
                           },
                           child: const Text("Add Barrage"),
                         ),
