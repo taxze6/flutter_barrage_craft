@@ -8,6 +8,7 @@ class BarrageModel {
   double runDistance = 0;
   double everyFrameRunDistance;
   Size barrageSize;
+  bool pause = true;
 
   BarrageModel({
     required this.barrageId,
@@ -48,5 +49,10 @@ class BarrageModel {
   /// The barrage executes the next frame.
   void runNextFrame() {
     runDistance += everyFrameRunDistance * BarrageConfig.barrageRate;
+  }
+
+  @override
+  String toString() {
+    return 'BarrageModel{barrageId: $barrageId, offsetX: $offsetX, offsetY: $offsetY, runDistance: $runDistance, barrageSize: $barrageSize}';
   }
 }

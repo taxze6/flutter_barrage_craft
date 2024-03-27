@@ -82,6 +82,10 @@ class BarrageController {
     BarrageConfig.barrageTapCallBack = callBack;
   }
 
+  void setBarrageDoubleTapCallBack(Function(BarrageModel) callBack) {
+    BarrageConfig.barrageDoubleTapCallBack = callBack;
+  }
+
   ///When all the barrages are off the screen
   void allBarrageOffScreenCallBack(
     UniqueKey barrageId,
@@ -97,9 +101,9 @@ class BarrageController {
     UniqueKey barrageId,
     // required Function() callBack,
   ) {
-    if (barrageId == barrageManager.barrageKeys.last) {
-      // callBack();
-    }
+    // if (barrageId == barrageManager.barrageKeys.last) {
+    // callBack();
+    // }
   }
 
   ///Render the next frame
@@ -111,11 +115,13 @@ class BarrageController {
     List<BarrageModel> newBarrages =
         List.generate(oldBarrages.length, (index) => oldBarrages[index]);
     for (var barrage in newBarrages) {
-      barrage.runNextFrame();
-      //End of single screen run (off screen).
-      if (barrage.allOutLeave) {
-        allBarrageOffScreenCallBack(barrage.barrageId);
-        singleBarrageOffScreenCallBack(barrage.barrageId);
+      if(barrage.pause){
+        barrage.runNextFrame();
+        //End of single screen run (off screen).
+        if (barrage.allOutLeave) {
+          allBarrageOffScreenCallBack(barrage.barrageId);
+          singleBarrageOffScreenCallBack(barrage.barrageId);
+        }
       }
     }
     return newBarrages;
