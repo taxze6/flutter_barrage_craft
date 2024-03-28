@@ -31,32 +31,53 @@ class BarrageUtils {
     return Size(w, h);
   }
 
-  static Future<Size> getBarrageSizeByWidget(Widget widget) async {
-    final GlobalKey key = GlobalKey();
-    final Completer<Size> completer = Completer<Size>();
-    final MeasurableWidget measurableWidget = MeasurableWidget(
-      key: key,
-      onChange: (Size size) {
-        completer.complete(size);
-        if (size != Size.zero) {
-          print("----The size of widget is:$size");
-        }
+  static Future<Size> getBarrageSizeByWidget(
+      BuildContext c, Widget widget) async {
+    // print(c.size);
+    final GlobalKey overlayKey = GlobalKey();
+
+    // Create the Completer to wait for the size calculation to complete
+    Completer<Size> completer = Completer<Size>();
+
+    // Create a rendered Widget
+    final overlayEntry = OverlayEntry(
+      builder: (context) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          // Check overlayKey currentContext for null
+          if (overlayKey.currentContext != null) {
+            // Get render object
+            final RenderBox renderBox =
+                overlayKey.currentContext!.findRenderObject() as RenderBox;
+            // Get Size
+            final Size size = renderBox.size;
+            // Pass the dimensions to the Completer.
+            completer.complete(size);
+            print('Barrage size: $size');
+          } else {
+            // If overlayKey currentContext is empty, it throws an exception
+            completer.completeError("Overlay context is null");
+          }
+        });
+        return Positioned(
+          key: overlayKey,
+          top: -1999, // Render off-screen
+          left: 0,
+          child: widget,
+        );
       },
-      child: widget,
     );
 
-    // Check that GlobalKey has been associated with the visual tree
-    if (key.currentContext == null) {
-      throw Exception("Error: GlobalKey is not attached to the visual tree.");
+    // Insert OverlayEntry in off-screen rendering
+    Overlay.of(c).insert(overlayEntry);
+
+    try {
+      // Wait for the size calculation to complete
+      Size size = await completer.future;
+      return size;
+    } finally {
+      // The OverlayEntry needs to be removed regardless of whether the dimensions were successfully obtained.
+      overlayEntry.remove();
     }
-
-    final BuildContext context = key.currentContext!;
-    Overlay.of(context).insert(
-      OverlayEntry(
-        builder: (BuildContext context) => measurableWidget,
-      ),
-    );
-    return completer.future;
   }
 
   ///Calculate how far each frame needs to run based on the length of the barrage.
