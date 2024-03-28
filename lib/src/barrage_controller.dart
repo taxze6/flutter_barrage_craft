@@ -86,6 +86,11 @@ class BarrageController {
     BarrageConfig.barrageDoubleTapCallBack = callBack;
   }
 
+  void changeBarrageRate(int rate) {
+    assert(rate > 0);
+    BarrageConfig.barrageRate = 1.0 * rate;
+  }
+
   ///When all the barrages are off the screen
   void allBarrageOffScreenCallBack(
     UniqueKey barrageId,
@@ -115,7 +120,7 @@ class BarrageController {
     List<BarrageModel> newBarrages =
         List.generate(oldBarrages.length, (index) => oldBarrages[index]);
     for (var barrage in newBarrages) {
-      if(barrage.pause){
+      if (barrage.pause) {
         barrage.runNextFrame();
         //End of single screen run (off screen).
         if (barrage.allOutLeave) {
@@ -160,13 +165,16 @@ class BarrageController {
   Future<BarrageModel> addBarrage({
     required Widget barrageWidget,
     Size? widgetSize,
+    BuildContext? context,
   }) async {
     late Size barrageSize;
     if (widgetSize != null) {
       barrageSize = widgetSize;
     } else {
+      assert(context != null);
       try {
-        barrageSize = await BarrageUtils.getBarrageSizeByWidget(barrageWidget);
+        barrageSize =
+            await BarrageUtils.getBarrageSizeByWidget(context!, barrageWidget);
       } catch (e) {
         print(e);
       }
@@ -174,7 +182,8 @@ class BarrageController {
     double everyFrameRunDistance =
         BarrageUtils.getBarrageEveryFrameRateRunDistance(barrageSize.width);
     double runDistance = BarrageConfig.unitTimer * everyFrameRunDistance;
-    //TODO To be optimized: If no track can have an injection barrage, wait for a while.
+
+    /// To be optimized: If no track can have an injection barrage, wait for a while.
     BarrageTrack? track = findAllowInsertTrack(barrageSize);
     if (track == null) {
       // If no track can have an injection barrage, wait for a while and try again

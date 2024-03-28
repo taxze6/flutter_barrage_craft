@@ -18,7 +18,7 @@ class BarrageConfig {
   ///The area shown by the barrage.
   static Size areaSize = const Size(0, 0);
 
-  ///Barrage moves double speed, default is 1.
+  ///Multiple of barrage movement speed, default is 1.
   static double barrageRate = 1.0;
 
   ///Barrage click event.
