@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_barrage_craft/flutter_barrage_craft.dart';
 
@@ -5,14 +7,30 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Barrage Craft',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   BarrageController controller = BarrageController();
 
   @override
@@ -37,80 +55,108 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Flutter Barrage Craft'),
-        ),
-        body: SizedBox(
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Text(
-                  "Barrage Demonstration",
-                  style: TextStyle(
-                    fontSize: 20,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Flutter Barrage Craft'),
+      ),
+      body: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                "Barrage Demonstration",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            Container(
+              height: 300,
+              decoration: const BoxDecoration(
+                color: Colors.black,
+              ),
+              child: Stack(
+                children: [
+                  BarrageView(
+                    controller: controller,
                   ),
-                ),
+                ],
               ),
-              Container(
-                height: 300,
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                ),
-                child: Stack(
-                  children: [
-                    BarrageView(
-                      controller: controller,
-                    ),
-                  ],
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+              child: Wrap(
+                alignment: WrapAlignment.start,
+                spacing: 12,
+                runSpacing: 10,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.pause();
+                    },
+                    child: const Text("Pause"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.play();
+                    },
+                    child: const Text("Play"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.changeBarrageRate(3);
+                    },
+                    child: const Text("Speed 🍖"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.changeBarrageRate(1);
+                    },
+                    child: const Text("Speed 🥝"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      controller.addBarrage(
+                        barrageWidget: const Text(
+                          "Test Barrage",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        context: context,
+                      );
+                    },
+                    child: const Text("Add Barrage"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      controller.addBarrage(
+                        barrageWidget: Container(
+                          width: 200,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.primaries[
+                                Random().nextInt(Colors.primaries.length)],
+                          ),
+                          child: const Text(
+                            "Container Test Barrage",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        context: context,
+                      );
+                    },
+                    child: const Text("Add Box Barrage"),
+                  ),
+                ],
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            controller.pause();
-                          },
-                          child: const Text("Pause"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            controller.addBarrage(
-                                    barrageWidget: Text(
-                                      "1111",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    widgetSize: Size(80, 20))
-                                // .then((value) => {})
-                                ;
-                          },
-                          child: const Text("Add Barrage"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            controller.play();
-                          },
-                          child: const Text("Play"),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
