@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barrage_craft/src/config/barrage_config.dart';
 import 'package:flutter_barrage_craft/src/model/barrage_model.dart';
-import 'package:flutter_barrage_craft/src/utils/barrage_utils.dart';
 
 import '../model/track_model.dart';
 

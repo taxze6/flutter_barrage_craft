@@ -1,7 +1,7 @@
 name: flutter_barrage_craft
-description: "A new Flutter project."
-version: 0.0.1
-homepage:
+description: A multi-platform barrage plugin.
+version: 1.0.0
+homepage: https://github.com/taxze6"
 
 environment:
   sdk: '>=3.2.6 <4.0.0'
@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
   flutter_test:

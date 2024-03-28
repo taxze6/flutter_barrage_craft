@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barrage_craft/src/config/barrage_config.dart';
 import 'package:flutter_barrage_craft/src/manager/barrage_manager.dart';
@@ -176,7 +177,8 @@ class BarrageController {
         barrageSize =
             await BarrageUtils.getBarrageSizeByWidget(context!, barrageWidget);
       } catch (e) {
-        print(e);
+        rethrow;
+        // print(e);
       }
     }
     double everyFrameRunDistance =
@@ -203,7 +205,9 @@ class BarrageController {
       offsetMS: 0,
     );
     track.lastBarrageId = barrage.barrageId;
-    print(" Join the track as: ${track.toString()}");
+    if (kDebugMode) {
+      print(" Join the track as: ${track.toString()}");
+    }
     return barrage;
   }
 }
