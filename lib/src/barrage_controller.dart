@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barrage_craft/src/config/barrage_config.dart';
 import 'package:flutter_barrage_craft/src/manager/barrage_manager.dart';
 import 'package:flutter_barrage_craft/src/manager/track_manager.dart';
 import 'package:flutter_barrage_craft/src/utils/barrage_utils.dart';
-
 import 'model/barrage_model.dart';
 import 'model/track_model.dart';
 
@@ -94,9 +92,11 @@ class BarrageController {
   void setAllBarragesRemoveScreenCallBack(Function(BarrageModel) callBack) {
     BarrageConfig.allBarragesRemoveScreenCallBack = callBack;
   }
+
   void setSingleBarrageShowScreenCallBack(Function(BarrageModel) callBack) {
     BarrageConfig.singleBarrageShowScreenCallBack = callBack;
   }
+
   void changeBarrageRate(double rate) {
     assert(rate > 0);
     BarrageConfig.barrageRate = 1.0 * rate;
@@ -147,7 +147,7 @@ class BarrageController {
       if (BarrageConfig.singleBarrageShowScreenCallBack != null) {
         BarrageConfig.singleBarrageShowScreenCallBack!(barrage);
       } else {
-            () {
+        () {
           if (kDebugMode) {
             print("Individual barrage are rendered completely on the screen.");
           }

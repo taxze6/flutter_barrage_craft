@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class BarrageTrack {
   UniqueKey trackId = UniqueKey();
@@ -11,6 +11,7 @@ class BarrageTrack {
   void unloadLastBarrageId() {
     lastBarrageId = null;
   }
+
   @override
   String toString() {
     return 'BarrageTrack(trackId: $trackId, lastBarrageId: $lastBarrageId, offsetTop: $offsetTop, trackHeight: $trackHeight)';
