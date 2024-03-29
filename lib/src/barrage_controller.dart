@@ -94,7 +94,9 @@ class BarrageController {
   void setAllBarragesRemoveScreenCallBack(Function(BarrageModel) callBack) {
     BarrageConfig.allBarragesRemoveScreenCallBack = callBack;
   }
-
+  void setSingleBarrageShowScreenCallBack(Function(BarrageModel) callBack) {
+    BarrageConfig.singleBarrageShowScreenCallBack = callBack;
+  }
   void changeBarrageRate(double rate) {
     assert(rate > 0);
     BarrageConfig.barrageRate = 1.0 * rate;
@@ -131,6 +133,23 @@ class BarrageController {
         () {
           if (kDebugMode) {
             print("A single barrage-removal screen handling event is not set.");
+          }
+        }();
+      }
+    }
+  }
+
+  void singBarrageAllShowScreenCallBack(
+    UniqueKey barrageId,
+  ) {
+    BarrageModel? barrage = barrageManager.barragesMap[barrageId];
+    if (barrage != null && barrage.allOutRight) {
+      if (BarrageConfig.singleBarrageShowScreenCallBack != null) {
+        BarrageConfig.singleBarrageShowScreenCallBack!(barrage);
+      } else {
+            () {
+          if (kDebugMode) {
+            print("Individual barrage are rendered completely on the screen.");
           }
         }();
       }

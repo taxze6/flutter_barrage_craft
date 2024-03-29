@@ -32,4 +32,7 @@ class BarrageConfig {
 
   ///All barrages removes screen
   static Function(BarrageModel)? allBarragesRemoveScreenCallBack;
+
+  ///Single barrage all show screen
+  static Function(BarrageModel)? singleBarrageShowScreenCallBack;
 }
