@@ -36,16 +36,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    controller.setBarrageTapCallBack((value) {
-      print(value.toString());
-      //Pause a single barrage.
-      setState(() {
-        value.pause = !value.pause;
-      });
-    });
-    controller.setBarrageDoubleTapCallBack((value) {
-      print(value.toString());
-    });
+    controller.setBarrageTapCallBack((value) {});
+    controller.setBarrageDoubleTapCallBack((value) {});
+    controller.setSingleBarrageRemoveScreenCallBack((value) {});
+    controller.setAllBarragesRemoveScreenCallBack((value) {});
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         controller.init(Size(MediaQuery.of(context).size.width, 300));
@@ -67,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
               child: Text(
-                "Barrage Demonstration",
+                "Barrage Demo",
                 style: TextStyle(
                   fontSize: 20,
                 ),
@@ -123,6 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         barrageWidget: const Text(
                           "Test Barrage",
                           style: TextStyle(
+                            fontSize: 14,
                             color: Colors.white,
                           ),
                         ),
@@ -135,23 +130,48 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () async {
                       controller.addBarrage(
                         barrageWidget: Container(
-                          width: 200,
-                          height: 50,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.primaries[
                                 Random().nextInt(Colors.primaries.length)],
                           ),
-                          child: const Text(
-                            "Container Test Barrage",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              FlutterLogo(),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Text(
+                                "Container Test Barrage",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         context: context,
                       );
                     },
                     child: const Text("Add Box Barrage"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      controller.addBarrage(
+                        barrageWidget: Image.asset(
+                          "assets/app.png",
+                          width: 200,
+                          height: 100,
+                        ),
+                        context: context,
+                      );
+                    },
+                    child: const Text("Add Image Barrage"),
                   ),
                 ],
               ),
