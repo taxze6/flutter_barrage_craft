@@ -36,9 +36,6 @@ class BarrageUtils {
     BuildContext c,
     Widget widget,
   ) async {
-    if (kDebugMode) {
-      print(c.size);
-    }
     // Create the Completer to wait for the size calculation to complete
     Completer<Size> completer = Completer<Size>();
 

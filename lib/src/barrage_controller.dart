@@ -87,7 +87,15 @@ class BarrageController {
     BarrageConfig.barrageDoubleTapCallBack = callBack;
   }
 
-  void changeBarrageRate(int rate) {
+  void setSingleBarrageRemoveScreenCallBack(Function(BarrageModel) callBack) {
+    BarrageConfig.singleBarrageRemoveScreenCallBack = callBack;
+  }
+
+  void setAllBarragesRemoveScreenCallBack(Function(BarrageModel) callBack) {
+    BarrageConfig.allBarragesRemoveScreenCallBack = callBack;
+  }
+
+  void changeBarrageRate(double rate) {
     assert(rate > 0);
     BarrageConfig.barrageRate = 1.0 * rate;
   }
@@ -95,21 +103,38 @@ class BarrageController {
   ///When all the barrages are off the screen
   void allBarrageOffScreenCallBack(
     UniqueKey barrageId,
-    // required Function() callBack,
   ) {
     if (barrageId == barrageManager.barrageKeys.last) {
-      // callBack();
+      BarrageModel? barrage = barrageManager.barragesMap[barrageId];
+      if (BarrageConfig.allBarragesRemoveScreenCallBack != null &&
+          barrage != null) {
+        BarrageConfig.allBarragesRemoveScreenCallBack!(barrage);
+      } else {
+        () {
+          if (kDebugMode) {
+            print("Not all barrage screen removal processing events are set.");
+          }
+        }();
+      }
     }
   }
 
   ///When a single barrage disappears from the screen.
   void singBarrageOffScreenCallBack(
     UniqueKey barrageId,
-    // required Function() callBack,
   ) {
-    // if (barrageId == barrageManager.barrageKeys.last) {
-    // callBack();
-    // }
+    BarrageModel? barrage = barrageManager.barragesMap[barrageId];
+    if (barrage != null && barrage.allOutLeave) {
+      if (BarrageConfig.singleBarrageRemoveScreenCallBack != null) {
+        BarrageConfig.singleBarrageRemoveScreenCallBack!(barrage);
+      } else {
+        () {
+          if (kDebugMode) {
+            print("A single barrage-removal screen handling event is not set.");
+          }
+        }();
+      }
+    }
   }
 
   ///Render the next frame
@@ -207,9 +232,9 @@ class BarrageController {
       offsetMS: 0,
     );
     track.lastBarrageId = barrage.barrageId;
-    if (kDebugMode) {
-      print(" Join the track as: ${track.toString()}");
-    }
+    // if (kDebugMode) {
+    //   print(" Join the track as: ${track.toString()}");
+    // }
     return barrage;
   }
 }

@@ -26,4 +26,10 @@ class BarrageConfig {
 
   ///Double click event of the bullet screen.
   static late Function(BarrageModel) barrageDoubleTapCallBack;
+
+  ///Single barrage removes screen
+  static Function(BarrageModel)? singleBarrageRemoveScreenCallBack;
+
+  ///All barrages removes screen
+  static Function(BarrageModel)? allBarragesRemoveScreenCallBack;
 }

@@ -32,7 +32,7 @@ class BarrageModel {
   /// The barrage is completely detached from the right wall.
   bool get allOutRight => runDistance > barrageSize.width;
 
-  /// The whole screen is off the screen.
+  /// The whole barrage is off the screen.
   bool get allOutLeave => runDistance > maxRunDistance;
 
   /// Remaining distance away.
