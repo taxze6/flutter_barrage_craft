@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     controller.setBarrageDoubleTapCallBack((value) {});
     controller.setSingleBarrageRemoveScreenCallBack((value) {});
     controller.setAllBarragesRemoveScreenCallBack((value) {});
+    controller.setSingleBarrageShowScreenCallBack((value) {});
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         controller.init(Size(MediaQuery.of(context).size.width, 300));
