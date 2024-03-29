@@ -1,7 +1,7 @@
 name: flutter_barrage_craft
 description: A multi-platform barrage plugin.
-version: 1.0.0
-homepage: https://github.com/taxze6"
+version: 1.0.1
+homepage: https://github.com/taxze6/flutter_barrage_craft
 
 environment:
   sdk: '>=3.2.6 <4.0.0'
