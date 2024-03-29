@@ -43,7 +43,9 @@ class BarrageUtils {
       builder: (context) {
         return MeasurableWidget(
           onChange: (Size size) async {
-            print('Barrage size: $size');
+            if (kDebugMode) {
+              print('Barrage size: $size');
+            }
             completer.complete(size);
           },
           child: widget,
