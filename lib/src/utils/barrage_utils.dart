@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_barrage_craft/src/config/barrage_config.dart';
@@ -32,42 +33,27 @@ class BarrageUtils {
   }
 
   static Future<Size> getBarrageSizeByWidget(
-      BuildContext c, Widget widget) async {
-    // print(c.size);
-    final GlobalKey overlayKey = GlobalKey();
-
+    BuildContext c,
+    Widget widget,
+  ) async {
+    if (kDebugMode) {
+      print(c.size);
+    }
     // Create the Completer to wait for the size calculation to complete
     Completer<Size> completer = Completer<Size>();
 
-    // Create a rendered Widget
     final overlayEntry = OverlayEntry(
       builder: (context) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          // Check overlayKey currentContext for null
-          if (overlayKey.currentContext != null) {
-            // Get render object
-            final RenderBox renderBox =
-                overlayKey.currentContext!.findRenderObject() as RenderBox;
-            // Get Size
-            final Size size = renderBox.size;
-            // Pass the dimensions to the Completer.
-            completer.complete(size);
+        return MeasurableWidget(
+          onChange: (Size size) async {
             print('Barrage size: $size');
-          } else {
-            // If overlayKey currentContext is empty, it throws an exception
-            completer.completeError("Overlay context is null");
-          }
-        });
-        return Positioned(
-          key: overlayKey,
-          top: -1999, // Render off-screen
-          left: 0,
+            completer.complete(size);
+          },
           child: widget,
         );
       },
     );
 
-    // Insert OverlayEntry in off-screen rendering
     Overlay.of(c).insert(overlayEntry);
 
     try {
@@ -151,37 +137,81 @@ class BarrageUtils {
   }
 }
 
-class MeasurableWidget extends SingleChildRenderObjectWidget {
+class MeasurableWidget extends StatefulWidget {
   const MeasurableWidget({
     Key? key,
     required this.onChange,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required this.child,
+  }) : super(key: key);
 
-  final void Function(Size size) onChange;
+  final Future<void> Function(Size size) onChange;
+  final Widget child;
 
   @override
-  RenderObject createRenderObject(BuildContext context) =>
-      MeasureSizeRenderObject(onChange);
+  _MeasurableWidgetState createState() => _MeasurableWidgetState();
 }
 
-class MeasureSizeRenderObject extends RenderProxyBox {
-  MeasureSizeRenderObject(this.onChange);
-
-  void Function(Size size) onChange;
-
-  Size _prevSize = Size.zero;
+class _MeasurableWidgetState extends State<MeasurableWidget> {
+  late Size _size;
 
   @override
-  void performLayout() {
-    super.performLayout();
-    Size newSize = child?.size ?? Size.zero;
-    if (_prevSize == newSize) return;
-    _prevSize = newSize;
+  void initState() {
+    super.initState();
+    _size = Size.zero;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getSize();
+    });
+  }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => onChange(newSize));
+  Future<void> _getSize() async {
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    setState(() {
+      _size = renderBox.size;
+    });
+    await widget.onChange(_size);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: -1999,
+      child: widget.child,
+    );
   }
 }
+
+// class MeasurableWidget extends SingleChildRenderObjectWidget {
+//   const MeasurableWidget({
+//     Key? key,
+//     required this.onChange,
+//     required Widget child,
+//   }) : super(key: key, child: child);
+//
+//   final void Function(Size size) onChange;
+//
+//   @override
+//   RenderObject createRenderObject(BuildContext context) =>
+//       MeasureSizeRenderObject(onChange);
+// }
+//
+// class MeasureSizeRenderObject extends RenderProxyBox {
+//   MeasureSizeRenderObject(this.onChange);
+//
+//   void Function(Size size) onChange;
+//
+//   Size _prevSize = Size.zero;
+//
+//   @override
+//   void performLayout() {
+//     super.performLayout();
+//     Size newSize = child?.size ?? Size.zero;
+//     if (_prevSize == newSize) return;
+//     _prevSize = newSize;
+//
+//     WidgetsBinding.instance.addPostFrameCallback((_) => onChange(newSize));
+//   }
+// }
+
 // typedef OnSized = void Function(Rect rect);
 //
 // mixin MeasurableMixin<T extends StatefulWidget> on State<T> {

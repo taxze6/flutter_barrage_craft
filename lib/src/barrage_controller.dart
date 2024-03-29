@@ -174,8 +174,10 @@ class BarrageController {
     } else {
       assert(context != null);
       try {
-        barrageSize =
-            await BarrageUtils.getBarrageSizeByWidget(context!, barrageWidget);
+        barrageSize = await BarrageUtils.getBarrageSizeByWidget(
+          context!,
+          barrageWidget,
+        );
       } catch (e) {
         rethrow;
         // print(e);

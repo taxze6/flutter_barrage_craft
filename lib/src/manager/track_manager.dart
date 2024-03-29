@@ -29,7 +29,7 @@ class BarrageTrackManager {
 
   ///Fill the area with track.
   void buildTrackFullScreen() async {
-    Size trackSize = Size(200, 30);
+    Size trackSize = const Size(200, 30);
     while (
         allTrackHeight < (BarrageConfig.areaSize.height - trackSize.height)) {
       if (areaAllowBuildNewTrack(trackSize.height)) {

@@ -13,7 +13,6 @@ class BarrageView extends StatefulWidget {
 }
 
 class _BarrageViewState extends State<BarrageView> {
-
   @override
   void initState() {
     super.initState();
